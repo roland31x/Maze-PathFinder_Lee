@@ -8,9 +8,12 @@
         Title="MainWindow" Height="600" Width="800">
     <Grid>
         <Canvas>
-            <Grid x:Name="MainGrid" Height="537" Width="537" Canvas.Left="153" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center">
+
+            <Grid x:Name="MainGrid" Canvas.Left="208" Canvas.Top="11" HorizontalAlignment="Left" VerticalAlignment="Top" Height="512" Width="512">
 
             </Grid>
+
+
             <Button Content="Place / erase walls" Canvas.Left="17" Canvas.Top="61" Click="Wall_click" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFA5A5A5" Width="115"/>
             <Button Content="Place Target spot" Canvas.Left="17" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Target_Click" Background="#FFFF7575" Width="115" Canvas.Top="36"/>
             <Button Content="Play" Canvas.Left="48" Canvas.Top="145" Click="Play_click" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF00FF1B" Width="53" Height="20"/>

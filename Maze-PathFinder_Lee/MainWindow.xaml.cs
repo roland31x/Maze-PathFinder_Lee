@@ -22,11 +22,11 @@ namespace Maze_PathFinder_Lee
     /// </summary>
     public partial class MainWindow : Window
     {
-        static Brush BackgroundBrush = Brushes.GreenYellow;
-        static Brush PlayerBrush = Brushes.Turquoise;
-        static Brush PathBrush = Brushes.Violet;
-        static Brush TargetBrush = Brushes.Red;
-        static Brush WallBrush = Brushes.Black;
+        static readonly Brush BackgroundBrush = Brushes.GreenYellow;
+        static readonly Brush PlayerBrush = Brushes.Turquoise;
+        static readonly Brush PathBrush = Brushes.Violet;
+        static readonly Brush TargetBrush = Brushes.Red;
+        static readonly Brush WallBrush = Brushes.Black;
 
 
         MarkedLabel[,] labels;
@@ -44,12 +44,14 @@ namespace Maze_PathFinder_Lee
         public MainWindow()
         {
             InitializeComponent();
-            Init();
+            Init(30);
             InfoBox.Content = "Idle";
         }
-        void Init()
+        void Init(int matsize)
         {
+            this.gamesize = matsize;
             labels = new MarkedLabel[gamesize, gamesize];
+            MainGrid.Children.Clear();
             MainGrid.Background = Brushes.Black;
             for (int i = 0; i < gamesize; i++)
             {
@@ -188,9 +190,8 @@ namespace Maze_PathFinder_Lee
                 if(next == Target)
                 {
                     found = true;
-                }
-                List<MarkedLabel> neighbors = Neighbors(next);
-                foreach(MarkedLabel n in neighbors)
+                }               
+                foreach(MarkedLabel n in Neighbors(next))
                 {
                     if (!n.wasMarked && n.Value >= 0)
                     {
