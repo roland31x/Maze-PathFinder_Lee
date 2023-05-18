@@ -1,0 +1,22 @@
+﻿<Window x:Class="Maze_PathFinder_Lee.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Maze_PathFinder_Lee"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="600" Width="800">
+    <Grid>
+        <Canvas>
+            <Grid x:Name="MainGrid" Height="537" Width="537" Canvas.Left="153" Canvas.Top="10" HorizontalAlignment="Left" VerticalAlignment="Center">
+
+            </Grid>
+            <Button Content="Place / erase walls" Canvas.Left="17" Canvas.Top="61" Click="Wall_click" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFA5A5A5" Width="115"/>
+            <Button Content="Place Target spot" Canvas.Left="17" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Target_Click" Background="#FFFF7575" Width="115" Canvas.Top="36"/>
+            <Button Content="Play" Canvas.Left="48" Canvas.Top="145" Click="Play_click" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF00FF1B" Width="53" Height="20"/>
+            <Button Content="Select Player" Canvas.Left="17" Canvas.Top="11" HorizontalAlignment="Center" VerticalAlignment="Top" Click="PlayerSelect_click" Width="115" Background="#FF00FFE2"/>
+            <Button Content="Reset" Canvas.Left="47" Canvas.Top="199" Click="Reset_click" Background="#FFDAFF00" HorizontalAlignment="Left" VerticalAlignment="Top" Width="55"/>
+            <Label x:Name="InfoBox" Content="Label" Canvas.Left="17" Canvas.Top="274" HorizontalAlignment="Left" VerticalAlignment="Center" Width="115" HorizontalContentAlignment="Center"/>
+        </Canvas>
+    </Grid>
+</Window>
