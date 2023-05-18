@@ -198,10 +198,12 @@ namespace Maze_PathFinder_Lee
                 isPlaying = false;
                 return;
             }
+
             //foreach(MarkedLabel label in labels)
             //{
             //    label.label.Content = label.Value.ToString();
             //}
+
             List<MarkedLabel> path = new List<MarkedLabel>();
             path.Add(Target);
             for (int i = 0; i < Target.Value; i++)
@@ -228,7 +230,7 @@ namespace Maze_PathFinder_Lee
         }
         async Task MovePlayer(MarkedLabel label)
         {
-            player.label.Background = Brushes.ForestGreen;
+            player!.label.Background = Brushes.ForestGreen;
             player = label;
             player.label.Background = Brushes.Turquoise;
             await Task.Delay(100);
