@@ -22,8 +22,15 @@ namespace Maze_PathFinder_Lee
     /// </summary>
     public partial class MainWindow : Window
     {
+        static Brush BackgroundBrush = Brushes.GreenYellow;
+        static Brush PlayerBrush = Brushes.Turquoise;
+        static Brush PathBrush = Brushes.Violet;
+        static Brush TargetBrush = Brushes.Red;
+        static Brush WallBrush = Brushes.Black;
+
+
         MarkedLabel[,] labels;
-        int gamesize = 25;
+        int gamesize = 16;
         bool isSelectingPlayer = false;
         bool isSelectingTarget = false;
         bool isSelectingWalls = false;
@@ -32,6 +39,8 @@ namespace Maze_PathFinder_Lee
         MarkedLabel? Target;
         MarkedLabel? player;
         List<int[]> neighbors = new List<int[]>() { new int[] { 0, 1 }, new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 } };
+
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -50,7 +59,7 @@ namespace Maze_PathFinder_Lee
                 {
                     Label L = new Label()
                     {
-                        Background = Brushes.ForestGreen,
+                        Background = BackgroundBrush,
                         Margin = new Thickness(1, 1, 1, 1),
                     };
                     L.MouseDown += LabelClick;
@@ -64,54 +73,54 @@ namespace Maze_PathFinder_Lee
                 }
             }
             player = labels[0, 0];
-            player.label.Background = Brushes.Turquoise;
+            player.label.Background = PlayerBrush;
         }
         private void LabelClick(object sender, MouseEventArgs e)
         {
             MarkedLabel clicked = ((sender as Label)!.Tag as MarkedLabel)!;
             if (isSelectingTarget)
             {
+                if(clicked.Value != 0)
+                {
+                    return;
+                }
                 if(Target != null)
                 {
-                    Target.label.Background = Brushes.ForestGreen;
+                    Target.label.Background = BackgroundBrush;
                 }                  
                 Target = clicked;
-                Target.label.Background = Brushes.Red;
+                Target.label.Background = TargetBrush;
                 
             }
             else if(isSelectingWalls)
-            {
-                
+            {               
                 if(clicked.Value == 0)
                 {
                     clicked.Value = -1;
-                    clicked.label.Background = Brushes.Black;
+                    clicked.label.Background = WallBrush;
                 }
                 else if(clicked.Value == -1)
                 {
                     clicked.Value = 0;
-                    clicked.label.Background = Brushes.ForestGreen;
+                    clicked.label.Background = BackgroundBrush;
                 }
                 else
                 {
                     return;
                 }
             }
-            else
+            else if(isSelectingPlayer)
             {
-                if(clicked.Value == 0)
-                {
-                    if(player != null)
-                    {
-                        player.label.Background = Brushes.ForestGreen;
-                    }
-                    player = clicked;
-                    player.label.Background = Brushes.Turquoise;
-                }
-                else
+                if (clicked.Value != 0)
                 {
                     return;
                 }
+                if (player != null)
+                {
+                    player.label.Background = BackgroundBrush;
+                }
+                player = clicked;
+                player.label.Background = PlayerBrush;
             }
         }
 
@@ -199,7 +208,7 @@ namespace Maze_PathFinder_Lee
                 return;
             }
 
-            //foreach(MarkedLabel label in labels)
+            //foreach (MarkedLabel label in labels)
             //{
             //    label.label.Content = label.Value.ToString();
             //}
@@ -230,9 +239,9 @@ namespace Maze_PathFinder_Lee
         }
         async Task MovePlayer(MarkedLabel label)
         {
-            player!.label.Background = Brushes.ForestGreen;
+            player!.label.Background = PathBrush;
             player = label;
-            player.label.Background = Brushes.Turquoise;
+            player.label.Background = PlayerBrush;
             await Task.Delay(100);
         }
         List<MarkedLabel> Neighbors(MarkedLabel target)
@@ -254,7 +263,7 @@ namespace Maze_PathFinder_Lee
             foreach(MarkedLabel l in labels)
             {
                 l.Value = 0;
-                l.label.Background = Brushes.ForestGreen;
+                l.label.Background = BackgroundBrush;
                 l.wasMarked = false;
             }
         }
