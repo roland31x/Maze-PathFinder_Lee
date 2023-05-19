@@ -281,7 +281,7 @@ namespace Maze_PathFinder_Lee
             player!.label.Background = PathBrush;
             player = label;
             player.label.Background = PlayerBrush;
-            await Task.Delay(20);
+            await Task.Delay(50);
         }
         List<MarkedLabel> Neighbors(MarkedLabel target)
         {
