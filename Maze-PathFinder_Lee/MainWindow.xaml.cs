@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Maze_PathFinder_Lee
     {
         static readonly Brush BackgroundBrush = Brushes.GreenYellow;
         static readonly Brush PlayerBrush = Brushes.Turquoise;
-        static readonly Brush PathBrush = Brushes.Violet;
+        static readonly Brush PathBrush = Brushes.DarkViolet;
         static readonly Brush TargetBrush = Brushes.Red;
         static readonly Brush WallBrush = Brushes.Black;
 
@@ -44,8 +45,24 @@ namespace Maze_PathFinder_Lee
         public MainWindow()
         {
             InitializeComponent();
-            Init(30);
+            Init(92);
             InfoBox.Content = "Idle";
+            StreamReader sr = new StreamReader(@"..\..\..\Maze1.txt");
+            string buffer;
+            int j = 0;
+            while (!sr.EndOfStream)
+            {
+                buffer = sr.ReadLine()!;
+                for(int i = 0; i < buffer.Length; i++)
+                {
+                    if (buffer[i] - '0' == 1)
+                    {
+                        labels[j, i].label.Background = WallBrush;
+                        labels[j, i].Value = -1;
+                    }
+                }
+                j++;
+            }
         }
         void Init(int matsize)
         {
@@ -62,7 +79,7 @@ namespace Maze_PathFinder_Lee
                     Label L = new Label()
                     {
                         Background = BackgroundBrush,
-                        Margin = new Thickness(1, 1, 1, 1),
+                        //Margin = new Thickness(1, 1, 1, 1),
                     };
                     L.MouseDown += LabelClick;
 
