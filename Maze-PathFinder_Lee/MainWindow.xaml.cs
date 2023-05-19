@@ -31,12 +31,15 @@ namespace Maze_PathFinder_Lee
 
 
         MarkedLabel[,] labels;
-        int gamesize = 16;
+        int gamesizeH = 16;
+        int gamesizeW = 16;
         bool isSelectingPlayer = false;
         bool isSelectingTarget = false;
         bool isSelectingWalls = false;
         bool isPlaying = false;
-       
+        string MapFile = @"..\..\..\Maze1.txt";
+
+
         MarkedLabel? Target;
         MarkedLabel? player;
         List<int[]> neighbors = new List<int[]>() { new int[] { 0, 1 }, new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 } };
@@ -45,36 +48,54 @@ namespace Maze_PathFinder_Lee
         public MainWindow()
         {
             InitializeComponent();
-            Init(92);
+            Init(16,10);
             InfoBox.Content = "Idle";
-            StreamReader sr = new StreamReader(@"..\..\..\Maze1.txt");
+            LoadMap(MapFile);
+           
+        }
+        void LoadMap(string FileName)
+        {
+            StreamReader sr = new StreamReader(FileName);
             string buffer;
-            int j = 0;
+            List<string> lines = new List<string>();
+            
             while (!sr.EndOfStream)
             {
-                buffer = sr.ReadLine()!;
-                for(int i = 0; i < buffer.Length; i++)
+                lines.Add(sr.ReadLine()!);                
+            }
+            sr.Close();
+            Init(lines.Count, lines[0].Length);
+
+            for(int i = 0; i < lines.Count; i++)
+            {
+                buffer = lines[i];
+                for (int j = 0; j < buffer.Length; j++)
                 {
-                    if (buffer[i] - '0' == 1)
+                    if (buffer[j] - '0' == 1)
                     {
-                        labels[j, i].label.Background = WallBrush;
-                        labels[j, i].Value = -1;
+                        labels[i, j].label.Background = WallBrush;
+                        labels[i, j].Value = -1;
                     }
                 }
-                j++;
             }
         }
-        void Init(int matsize)
+        void Init(int matsizeH, int matsizeW)
         {
-            this.gamesize = matsize;
-            labels = new MarkedLabel[gamesize, gamesize];
+            this.gamesizeH = matsizeH;
+            this.gamesizeW = matsizeW;
+            labels = new MarkedLabel[gamesizeH, gamesizeW];
             MainGrid.Children.Clear();
+            MainGrid.ColumnDefinitions.Clear();
+            MainGrid.RowDefinitions.Clear();
             MainGrid.Background = Brushes.Black;
-            for (int i = 0; i < gamesize; i++)
+            for(int i = 0; i < gamesizeW; i++)
             {
-                MainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(MainGrid.Height / gamesize) });
-                MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(MainGrid.Width / gamesize) });
-                for (int j = 0; j < gamesize; j++)
+                MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(MainGrid.Width / gamesizeW) });
+            }
+            for (int i = 0; i < gamesizeH; i++)
+            {
+                MainGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(MainGrid.Height / gamesizeH) });              
+                for (int j = 0; j < gamesizeW; j++)
                 {
                     Label L = new Label()
                     {
@@ -260,7 +281,7 @@ namespace Maze_PathFinder_Lee
             player!.label.Background = PathBrush;
             player = label;
             player.label.Background = PlayerBrush;
-            await Task.Delay(100);
+            await Task.Delay(20);
         }
         List<MarkedLabel> Neighbors(MarkedLabel target)
         {
@@ -270,7 +291,7 @@ namespace Maze_PathFinder_Lee
                 int i = target.Row + neighbors[0];
                 int j = target.Column + neighbors[1];
 
-                if (i < 0 || j < 0 || i >= gamesize || j >= gamesize)
+                if (i < 0 || j < 0 || i >= gamesizeH || j >= gamesizeW)
                     continue;
                 tor.Add(labels[i, j]);
             }
