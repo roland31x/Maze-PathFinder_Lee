@@ -23,6 +23,7 @@ namespace Maze_PathFinder_Lee
     /// </summary>
     public partial class MainWindow : Window
     {
+        static readonly Random rng = new Random();
         static readonly Brush BackgroundBrush = Brushes.GreenYellow;
         static readonly Brush PlayerBrush = Brushes.Turquoise;
         static readonly Brush PathBrush = Brushes.DarkViolet;
@@ -299,6 +300,8 @@ namespace Maze_PathFinder_Lee
         }
         void Reset()
         {
+            player = null;
+            Target = null;
             foreach(MarkedLabel l in labels)
             {
                 l.Value = 0;
@@ -317,6 +320,242 @@ namespace Maze_PathFinder_Lee
             }
             Reset();
         }
+
+        private async void NewMaze(object sender, RoutedEventArgs e)
+        {
+            Reset();
+            InfoBox.Content = "Generating new maze...";
+            foreach(Button b in MainCanvas.Children.OfType<Button>())
+            {
+                b.IsEnabled = false;
+            }
+            int n = labels.GetLength(0);
+            int unmarked = 0;
+            for(int i = 0; i < n; i++)
+            {
+                labels[0, i].Value = -1;
+                labels[0, i].label.Background = WallBrush;
+                labels[n - 1, i].Value = -1;
+                labels[n - 1, i].label.Background = WallBrush;
+                labels[i, 0].Value = -1;
+                labels[i, 0].label.Background = WallBrush;
+                labels[i, n - 1].Value = -1;
+                labels[i, n - 1].label.Background = WallBrush;
+            }
+            for(int i = 1; i < n; i += 2)
+            {
+                for(int j = 1; j < n; j += 2)
+                {
+                    if (labels[i, j].Value == 0)
+                    {
+                        unmarked++;
+                        //labels[i,j].label.Background = PlayerBrush;
+                    }
+                }
+            }
+            int tx = rng.Next(0, n / 2) * 2 + 1;
+            int ty = rng.Next(0, n / 2) * 2 + 1;
+            //labels[tx, ty].label.Background = Brushes.Wheat;
+            while (unmarked > 0)
+            {
+                int x, y;
+                do
+                {
+                    x = rng.Next(0, n / 2) * 2 + 1;
+                    y = rng.Next(0, n / 2) * 2 + 1;
+                } while (labels[x, y].Value != 0 || ( x == tx && y == ty ));
+
+                labels[x, y].Value = 2;
+                //labels[x, y].label.Background = Brushes.Gray;
+                unmarked--;
+                int cx = x;
+                int cy = y;
+                Stack<int> directions = new Stack<int>();
+                int backtrack = 1;
+                while (!(cx == tx && cy == ty))
+                {
+                    List<int> dirs = new List<int>() { 0, 1, 2, 3 };
+                    if (directions.Any())
+                    {
+                        switch (directions.Peek())
+                        {
+                            case 0:
+                                dirs.RemoveAt(1);
+                                break;
+                            case 1:
+                                dirs.RemoveAt(0);
+                                break;
+                            case 2:
+                                dirs.RemoveAt(3);
+                                break;
+                            case 3:
+                                dirs.RemoveAt(2);
+                                break;
+                        }
+                    }
+                    int direction = rng.Next(0, 4);
+
+                    directions.Push(direction);
+                    try
+                    {                      
+                        switch (direction)
+                        {
+                            case 0: //right
+                                cx += 2; break;
+                            case 1: // left
+                                cx -= 2; break;
+                            case 2: // up
+                                cy += 2; break;
+                            case 3: // down
+                                cy -= 2; break;
+                        }
+                        if (labels[cx, cy].Value == 0 || labels[cx, cy].Value == 1)
+                        {
+                            //switch (direction)
+                            //{
+                            //    case 0: //right
+                            //        //labels[cx - 1, cy].Value = i;
+                            //        labels[cx - 1, cy].label.Background = PlayerBrush;
+                            //        break;
+                            //    case 1: // left
+                            //        //labels[cx + 1, cy].Value = i;
+                            //        labels[cx + 1, cy].label.Background = PlayerBrush;
+                            //        break;
+                            //    case 2: // up
+                            //        //labels[cx, cy - 1].Value = i;
+                            //        labels[cx, cy - 1].label.Background = PlayerBrush;
+                            //        break;
+                            //    case 3: // down
+                            //        //labels[cx, cy + 1].Value = i;
+                            //        labels[cx, cy + 1].label.Background = PlayerBrush;
+                            //        break;
+                            //}
+                            await Task.Delay(10);
+                            if (labels[cx,cy].Value == 1)
+                            {
+                                break;
+                            }
+                            labels[cx, cy].Value = 2;
+                            labels[cx, cy].label.Background = PlayerBrush;
+                            if(backtrack > 1)
+                            {
+                                backtrack -= 1;
+                            }                 
+
+                            unmarked--;
+                        }
+                        else if (labels[cx,cy].Value >= 2)
+                        {
+                            int btaux = backtrack;
+                            bool firstmove = true;
+                            while(btaux > 0 && directions.Any())
+                            {
+                                if (!firstmove && labels[cx, cy].Value >= 2)
+                                {
+                                    labels[cx, cy].Value = 0;
+                                    //labels[cx, cy].label.Background = BackgroundBrush;
+                                    unmarked++;
+                                }
+                                int pastDir = directions.Pop();
+                                switch (pastDir)
+                                {
+                                    case 0: //right
+                                        cx -= 2; break;                                      
+                                    case 1: // left
+                                        cx += 2; break;
+                                    case 2: // up
+                                        cy -= 2; break;
+                                    case 3: // down
+                                        cy += 2; break;
+                                }                               
+                                firstmove = false;
+                                btaux--;
+                            }
+                            backtrack++;
+                            continue;
+                        }
+                    }
+                    catch(IndexOutOfRangeException)
+                    {
+                        switch (directions.Pop())
+                        {
+                            case 0: //right
+                                cx -= 2; break;
+                            case 1: // left
+                                cx += 2; break;
+                            case 2: // up
+                                cy -= 2; break;
+                            case 3: // down
+                                cy += 2; break;
+                        }
+                        continue;
+                    }
+                }
+                while(directions.Count > 0)
+                {
+                    int dir = directions.Pop();
+                    switch (dir)
+                    {
+                        case 0: //right
+                            labels[cx - 1, cy].Value = 2;
+                            //labels[cx - 1, cy].label.Background = Brushes.Red;
+                            break;
+                        case 1: // left
+                            labels[cx + 1, cy].Value = 2;
+                            //labels[cx + 1, cy].label.Background = Brushes.Red;
+                            break;
+                        case 2: // up
+                            labels[cx, cy - 1].Value = 2;
+                            //labels[cx, cy - 1].label.Background = Brushes.Red;
+                            break;
+                        case 3: // down
+                            labels[cx, cy + 1].Value = 2;
+                            //labels[cx, cy + 1].label.Background = Brushes.Red;
+                            break;
+                    }
+                    switch (dir)
+                    {
+                        case 0: //right
+                            cx -= 2; break;
+                        case 1: // left
+                            cx += 2; break;
+                        case 2: // up
+                            cy -= 2; break;
+                        case 3: // down
+                            cy += 2; break;
+                    }
+                    
+                    //await Task.Delay(1000);
+                }
+                foreach (MarkedLabel l in labels)
+                {
+                    if (l.Value >= 2)
+                    {
+                        l.Value = 1;
+                        l.label.Background = PathBrush;
+                    }
+                }
+                //await Task.Delay(1000);
+            }
+            foreach (MarkedLabel l in labels)
+            {
+                if (l.Value != 1)
+                {
+                    l.Value = -1;
+                    l.label.Background = WallBrush;
+                }
+                else
+                {
+                    l.Value = 0;
+                    l.label.Background = BackgroundBrush;
+                }
+            }
+            InfoBox.Content = "Idle...";
+            foreach (Button b in MainCanvas.Children.OfType<Button>())
+            {
+                b.IsEnabled = true;
+            }
+        }
     }
     public class MarkedLabel
     {
@@ -332,6 +571,10 @@ namespace Maze_PathFinder_Lee
             this.Row = row;
             this.Column = column;
             this.wasMarked = false;
+        }
+        public override string ToString()
+        {
+            return Value.ToString();
         }
     }
 }
