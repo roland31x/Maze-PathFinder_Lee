@@ -308,6 +308,10 @@ namespace Maze_PathFinder_Lee
                 l.label.Background = BackgroundBrush;
                 l.wasMarked = false;
             }
+            isSelectingPlayer = false;
+            isSelectingTarget = false;
+            isSelectingWalls = false;
+            InfoBox.Content = "Idle...";
         }
 
         
@@ -323,8 +327,12 @@ namespace Maze_PathFinder_Lee
 
         private async void NewMaze(object sender, RoutedEventArgs e)
         {
+            if (isPlaying)
+            {
+                return;
+            }
             Reset();
-            InfoBox.Content = "Generating new maze...";
+            InfoBox.Content = "Generating...";
             foreach(Button b in MainCanvas.Children.OfType<Button>())
             {
                 b.IsEnabled = false;
