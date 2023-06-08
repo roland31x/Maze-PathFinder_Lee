@@ -361,9 +361,9 @@ namespace Maze_PathFinder_Lee
                     }
                 }
             }
-            int tx = rng.Next(0, n / 2) * 2 + 1;
-            int ty = rng.Next(0, n / 2) * 2 + 1;
-            //labels[tx, ty].label.Background = Brushes.Wheat;
+            int tx = rng.Next((n - n / 2 - n / 10) / 2 + 1, (n / 2 + n / 10) / 2) * 2 + 1;
+            int ty = rng.Next((n - n / 2 - n / 10) / 2 + 1, (n / 2 + n / 10) / 2) * 2 + 1;
+            
             while (unmarked > 0)
             {
                 int x, y;
@@ -374,6 +374,7 @@ namespace Maze_PathFinder_Lee
                 } while (labels[x, y].Value != 0 || ( x == tx && y == ty ));
 
                 labels[x, y].Value = 2;
+                labels[tx, ty].label.Background = Brushes.Wheat;
                 //labels[x, y].label.Background = Brushes.Gray;
                 unmarked--;
                 int cx = x;
@@ -461,7 +462,7 @@ namespace Maze_PathFinder_Lee
                                 if (!firstmove && labels[cx, cy].Value >= 2)
                                 {
                                     labels[cx, cy].Value = 0;
-                                    //labels[cx, cy].label.Background = BackgroundBrush;
+                                    labels[cx, cy].label.Background = BackgroundBrush;
                                     unmarked++;
                                 }
                                 int pastDir = directions.Pop();
