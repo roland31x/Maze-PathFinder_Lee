@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Maze_PathFinder_Lee"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         Title="MainWindow" Height="600" Width="800">
     <Grid>
         <Canvas x:Name="MainCanvas">
@@ -17,12 +18,13 @@
 
             <Button Content="Place / erase walls" Canvas.Left="17" Canvas.Top="61" Click="Wall_click" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFA5A5A5" Width="115"/>
             <Button Content="Place Target spot" Canvas.Left="17" HorizontalAlignment="Left" VerticalAlignment="Top" Click="Target_Click" Background="#FFFF7575" Width="115" Canvas.Top="36"/>
-            <Button Content="Play" Canvas.Left="48" Canvas.Top="145" Click="Play_click" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF00FF1B" Width="53" Height="20"/>
+            <Button Content="Play" Canvas.Left="47" Canvas.Top="115" Click="Play_click" HorizontalAlignment="Left" VerticalAlignment="Center" Background="#FF00FF1B" Width="55" Height="20"/>
             <Button Content="Select Player" Canvas.Left="17" Canvas.Top="11" HorizontalAlignment="Center" VerticalAlignment="Top" Click="PlayerSelect_click" Width="115" Background="#FF00FFE2"/>
-            <Button Content="Reset" Canvas.Left="47" Canvas.Top="199" Click="Reset_click" Background="#FFDAFF00" HorizontalAlignment="Left" VerticalAlignment="Top" Width="55"/>
+            <Button Content="Reset" Canvas.Left="47" Canvas.Top="199" Click="Reset_click" Background="#FFDAFF00" HorizontalAlignment="Center" VerticalAlignment="Center" Width="55"/>
             <Label x:Name="InfoBox" Content="Label" Canvas.Left="17" Canvas.Top="274" HorizontalAlignment="Left" VerticalAlignment="Center" Width="115" HorizontalContentAlignment="Center"/>
             <Button Content="New Maze" Canvas.Left="33" Canvas.Top="352" HorizontalAlignment="Center" VerticalAlignment="Center" Click="NewMaze" Background="#FF96A6FF" Width="83"/>
-            <Button Content="Resize" Canvas.Left="44" Canvas.Top="429" HorizontalAlignment="Left" VerticalAlignment="Top" Width="61" Background="#FFF987FF" Click="ResizeButton_Click"/>
+            <Button Content="Resize" Canvas.Left="44" Canvas.Top="390" HorizontalAlignment="Center" VerticalAlignment="Top" Width="61" Background="#FFF987FF" Click="ResizeButton_Click"/>
+            <Button Content="Clear" Canvas.Left="47" Canvas.Top="140" Click="Clear_click" Background="#FFFFAF00" Width="55" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Canvas>
     </Grid>
 </Window>

@@ -43,7 +43,7 @@ namespace Maze_PathFinder_Lee
 
         MarkedLabel? Target;
         MarkedLabel? player;
-        List<int[]> neighbors = new List<int[]>() { new int[] { 0, 1 }, new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 } };
+        readonly List<int[]> neighbors = new List<int[]>() { new int[] { 0, 1 }, new int[] { -1, 0 }, new int[] { 1, 0 }, new int[] { 0, -1 } };
 
         
         public MainWindow()
@@ -311,7 +311,23 @@ namespace Maze_PathFinder_Lee
             InfoBox.Content = "Idle...";
         }
 
-        
+        private void Clear_click(object sender, RoutedEventArgs e)
+        {
+            if (isPlaying)
+            {
+                return;
+            }
+            foreach(MarkedLabel l in labels)
+            {
+                if(l.Value != -1)
+                {
+                    l.label.Background = BackgroundBrush;
+                    l.Value = 0;
+                }
+            }
+            player = null;
+            Target = null;
+        }
 
         private void Reset_click(object sender, RoutedEventArgs e)
         {
