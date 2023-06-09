@@ -323,6 +323,7 @@ namespace Maze_PathFinder_Lee
                 {
                     l.label.Background = BackgroundBrush;
                     l.Value = 0;
+                    l.wasMarked = false;
                 }
             }
             player = null;
