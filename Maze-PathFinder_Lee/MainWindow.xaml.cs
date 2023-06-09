@@ -49,7 +49,6 @@ namespace Maze_PathFinder_Lee
         public MainWindow()
         {
             InitializeComponent();
-            Init(16,10);
             InfoBox.Content = "Idle";
             LoadMap(MapFile);
            
@@ -113,8 +112,6 @@ namespace Maze_PathFinder_Lee
                     labels[i, j] = tag;
                 }
             }
-            player = labels[0, 0];
-            player.label.Background = PlayerBrush;
         }
         private void LabelClick(object sender, MouseEventArgs e)
         {
@@ -338,21 +335,25 @@ namespace Maze_PathFinder_Lee
                 b.IsEnabled = false;
             }
             int n = labels.GetLength(0);
+            int m = labels.GetLength(1);
             int unmarked = 0;
             for(int i = 0; i < n; i++)
+            {
+                labels[i, 0].Value = -1;
+                labels[i, 0].label.Background = WallBrush;
+                labels[i, m - 1].Value = -1;
+                labels[i, m - 1].label.Background = WallBrush;
+            }
+            for(int i = 0; i < m; i++)
             {
                 labels[0, i].Value = -1;
                 labels[0, i].label.Background = WallBrush;
                 labels[n - 1, i].Value = -1;
                 labels[n - 1, i].label.Background = WallBrush;
-                labels[i, 0].Value = -1;
-                labels[i, 0].label.Background = WallBrush;
-                labels[i, n - 1].Value = -1;
-                labels[i, n - 1].label.Background = WallBrush;
             }
             for(int i = 1; i < n; i += 2)
             {
-                for(int j = 1; j < n; j += 2)
+                for(int j = 1; j < m; j += 2)
                 {
                     if (labels[i, j].Value == 0)
                     {
@@ -361,26 +362,25 @@ namespace Maze_PathFinder_Lee
                     }
                 }
             }
-            int tx = rng.Next((n - n / 2 - n / 10) / 2 + 1, (n / 2 + n / 10) / 2) * 2 + 1;
-            int ty = rng.Next((n - n / 2 - n / 10) / 2 + 1, (n / 2 + n / 10) / 2) * 2 + 1;
-            
+            int tx = rng.Next(0, n / 2) * 2 + 1;
+            int ty = rng.Next(0, m / 2) * 2 + 1;
+
             while (unmarked > 0)
             {
                 int x, y;
                 do
                 {
                     x = rng.Next(0, n / 2) * 2 + 1;
-                    y = rng.Next(0, n / 2) * 2 + 1;
+                    y = rng.Next(0, m / 2) * 2 + 1;
                 } while (labels[x, y].Value != 0 || ( x == tx && y == ty ));
 
                 labels[x, y].Value = 2;
-                labels[tx, ty].label.Background = Brushes.Wheat;
+                //labels[tx, ty].label.Background = Brushes.Wheat;
                 //labels[x, y].label.Background = Brushes.Gray;
                 unmarked--;
                 int cx = x;
                 int cy = y;
                 Stack<int> directions = new Stack<int>();
-                int backtrack = 1;
                 while (!(cx == tx && cy == ty))
                 {
                     List<int> dirs = new List<int>() { 0, 1, 2, 3 };
@@ -420,68 +420,48 @@ namespace Maze_PathFinder_Lee
                         }
                         if (labels[cx, cy].Value == 0 || labels[cx, cy].Value == 1)
                         {
-                            //switch (direction)
-                            //{
-                            //    case 0: //right
-                            //        //labels[cx - 1, cy].Value = i;
-                            //        labels[cx - 1, cy].label.Background = PlayerBrush;
-                            //        break;
-                            //    case 1: // left
-                            //        //labels[cx + 1, cy].Value = i;
-                            //        labels[cx + 1, cy].label.Background = PlayerBrush;
-                            //        break;
-                            //    case 2: // up
-                            //        //labels[cx, cy - 1].Value = i;
-                            //        labels[cx, cy - 1].label.Background = PlayerBrush;
-                            //        break;
-                            //    case 3: // down
-                            //        //labels[cx, cy + 1].Value = i;
-                            //        labels[cx, cy + 1].label.Background = PlayerBrush;
-                            //        break;
-                            //}
-                            await Task.Delay(10);
+                            await Task.Delay(1);
                             if (labels[cx,cy].Value == 1)
                             {
                                 break;
                             }
                             labels[cx, cy].Value = 2;
-                            labels[cx, cy].label.Background = PlayerBrush;
-                            if(backtrack > 1)
-                            {
-                                backtrack -= 1;
-                            }                 
+                            labels[cx, cy].label.Background = PlayerBrush;                
 
                             unmarked--;
                         }
                         else if (labels[cx,cy].Value >= 2)
                         {
-                            int btaux = backtrack;
+                            int backx = cx, backy = cy;
                             bool firstmove = true;
-                            while(btaux > 0 && directions.Any())
+                            do
                             {
                                 if (!firstmove && labels[cx, cy].Value >= 2)
                                 {
                                     labels[cx, cy].Value = 0;
-                                    labels[cx, cy].label.Background = BackgroundBrush;
+                                    labels[cx, cy].label.Background = Brushes.Gray;
                                     unmarked++;
                                 }
                                 int pastDir = directions.Pop();
                                 switch (pastDir)
                                 {
                                     case 0: //right
-                                        cx -= 2; break;                                      
+                                        cx -= 2; break;
                                     case 1: // left
                                         cx += 2; break;
                                     case 2: // up
                                         cy -= 2; break;
                                     case 3: // down
                                         cy += 2; break;
-                                }                               
+                                }
                                 firstmove = false;
-                                btaux--;
-                            }
-                            backtrack++;
+                            } while ((backx != cx || backy != cy) && directions.Any());
+
                             continue;
+                        }
+                        else
+                        {
+                            throw new IndexOutOfRangeException();
                         }
                     }
                     catch(IndexOutOfRangeException)
@@ -564,6 +544,15 @@ namespace Maze_PathFinder_Lee
             {
                 b.IsEnabled = true;
             }
+        }
+
+        private void ResizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            int[] newvals = new int[] { labels.GetLength(0), labels.GetLength(1) };
+            ResizeMazeWindow rmw = new ResizeMazeWindow(newvals);
+            rmw.ShowDialog();
+            if (newvals[0] != labels.GetLength(0) || newvals[1] != labels.GetLength(1))
+                Init(newvals[0], newvals[1]);
         }
     }
     public class MarkedLabel
