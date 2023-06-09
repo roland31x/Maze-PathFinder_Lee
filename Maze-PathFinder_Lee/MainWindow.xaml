@@ -24,7 +24,7 @@
             <Label x:Name="InfoBox" Content="Label" Canvas.Left="17" Canvas.Top="274" HorizontalAlignment="Left" VerticalAlignment="Center" Width="115" HorizontalContentAlignment="Center"/>
             <Button Content="New Maze" Canvas.Left="33" Canvas.Top="352" HorizontalAlignment="Center" VerticalAlignment="Center" Click="NewMaze" Background="#FF96A6FF" Width="83"/>
             <Button Content="Resize" Canvas.Left="44" Canvas.Top="390" HorizontalAlignment="Center" VerticalAlignment="Top" Width="61" Background="#FFF987FF" Click="ResizeButton_Click"/>
-            <Button Content="Clear" Canvas.Left="47" Canvas.Top="140" Click="Clear_click" Background="#FFFFAF00" Width="55" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Button Content="Clear" Canvas.Left="47" Canvas.Top="156" Click="Clear_click" Background="#FFFFAF00" Width="55" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Canvas>
     </Grid>
 </Window>
